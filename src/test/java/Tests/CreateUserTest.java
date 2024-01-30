@@ -22,7 +22,9 @@ public class CreateUserTest {
 
 
     @Test
-    public void testMethod(){
+    public void testMethod(){  //facem intregul flow in acest test pentru a pastra logica de creare user, autentificare, token
+        //Adica facem aici toate REQUESTURILE DE BACKEND
+
         System.out.println("Step 1 - create user");
         createUser();
 
@@ -34,7 +36,7 @@ public class CreateUserTest {
 
     }
 
-    public void createUser(){
+    public void createUser(){  //PASUL 1 CREEAM USERUL CARE SA NE OFERE ID-UL
 
         RequestSpecification requestSpecification = RestAssured.given(); //configuram clientul cu anumite specificatii
         requestSpecification.baseUri("https://demoqa.com"); //specficam url-ul de baza pe care vrem sa il configuram
@@ -68,17 +70,17 @@ public class CreateUserTest {
         //Validam response body-ul requestului
 
         ResponseAccountSuccess responseAccountSuccess = response.body().as(ResponseAccountSuccess.class);
-        Assert.assertNotNull(responseAccountSuccess.getUserID());  //verificam ca exista o valoare pt id, cat nu e nul
+        Assert.assertNotNull(responseAccountSuccess.getUserID());  //verificam ca exista o valoare pt ID, ca nu e nul
         Assert.assertEquals(responseAccountSuccess.getUsername(), username); //verif ca username are valoarea din request
         Assert.assertNotNull(responseAccountSuccess.getBooks());  //verificam ca books sa contina cel putin "["
 
-        userID = responseAccountSuccess.getUserID();
+        userID = responseAccountSuccess.getUserID(); //am salvat userID-ul pentru a-l folosi la urmatorul pas
 
     }
 
     //facem un request POST care ne da token-ul - Acum facem autentificarea
 
-    public void generateToken(){
+    public void generateToken(){  //PASUL 2 - FACEM POSTUL CARE NE DA UN TOKEN
 
         RequestSpecification requestSpecification = RestAssured.given(); //configuram clientul cu anumite specificatii
         requestSpecification.baseUri("https://demoqa.com"); //specficam url-ul de baza pe care vrem sa il configuram
@@ -88,7 +90,6 @@ public class CreateUserTest {
 
         requestSpecification.body(requestAccountToken);   //atasam body-ul pe constructia clientului (cea de sus)
 
-
         //Accesam response-ul
 
         Response response = requestSpecification.post("/Account/v1/GenerateToken");  // accesam raspunsul trimitand un request de tip POST
@@ -96,26 +97,26 @@ public class CreateUserTest {
         ResponseBody body = response.getBody();
         body.prettyPrint(); //folosim in loc de system out
 
-        Assert.assertEquals(response.getStatusCode(), 200);
+        Assert.assertEquals(response.getStatusCode(), 200);  //validarea de status code
 
         ResponseTokenSuccess responseTokenSuccess = response.body().as(ResponseTokenSuccess.class);
-        Assert.assertNotNull(responseTokenSuccess.getToken());  //verificam ca exista o valoare pt id, cat nu e nul
+        Assert.assertNotNull(responseTokenSuccess.getToken());  //verificam ca exista o valoare , ca nu e nul
         Assert.assertNotNull(responseTokenSuccess.getExpires());
         Assert.assertEquals(responseTokenSuccess.getStatus(),"Success"); //verif ca username are valoarea din request
         Assert.assertEquals(responseTokenSuccess.getResult(), "User authorized successfully.");  //verificam ca books sa contina cel putin "["
 
-        token = responseTokenSuccess.getToken();
+        token = responseTokenSuccess.getToken(); //am extras/salvat tokenul pentru a-l folosi pentru urmatorul pas
 
     }
 
     //facem un GET pentru userul creat/generat
 
-     public void interractNewUser(){
+     public void interractNewUser(){  //PASUL 3 FACEM AUTORIZAREA
 
          RequestSpecification requestSpecification = RestAssured.given(); //configuram clientul cu anumite specificatii
          requestSpecification.baseUri("https://demoqa.com"); //specficam url-ul de baza pe care vrem sa il configuram
          requestSpecification.contentType("application/json"); //specificam ca e contentul de tip Jason
-         requestSpecification.header("Authorization", "Bearer " + token);
+         requestSpecification.header("Authorization", "Bearer " + token); //autorizare care foloseste token
 
          Response response = requestSpecification.get("/Account/v1/User/" + userID); //compunere de endpoint
 

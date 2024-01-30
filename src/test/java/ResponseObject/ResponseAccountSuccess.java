@@ -8,7 +8,7 @@ public class ResponseAccountSuccess {
 
     //invatam despre adnotari JsonProperty numit si alias, porecla
 
-    @JsonProperty("userID")
+    @JsonProperty("userID")  //definim fiecare camp din consolta pentru a stii cum sa il citeasca
     private String userID;
 
     @JsonProperty("username")

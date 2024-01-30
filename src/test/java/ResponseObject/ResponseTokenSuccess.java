@@ -19,6 +19,9 @@ public class ResponseTokenSuccess {
     @JsonProperty("status")
     private String status;
 
+    @JsonProperty("result")
+    private String result;
+
     public String getToken() {
         return token;
     }
@@ -35,7 +38,5 @@ public class ResponseTokenSuccess {
         return result;
     }
 
-    @JsonProperty("result")
-    private String result;
 
 }
