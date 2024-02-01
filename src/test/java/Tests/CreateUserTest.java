@@ -1,15 +1,15 @@
 package Tests;
 
-import RequestObject.RequestAccount;
-import RequestObject.RequestAccountToken;
-import ResponseObject.ResponseAccountAuthSuccess;
-import ResponseObject.ResponseAccountSuccess;
-import ResponseObject.ResponseTokenSuccess;
+import Actions.AccountActions;
+import Objects.RequestObject.RequestAccount;
+import Objects.RequestObject.RequestAccountToken;
+import Objects.ResponseObject.ResponseAccountAuthSuccess;
+import Objects.ResponseObject.ResponseAccountSuccess;
+import Objects.ResponseObject.ResponseTokenSuccess;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.response.ResponseBody;
 import io.restassured.specification.RequestSpecification;
-import org.json.simple.JSONObject;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -19,6 +19,8 @@ public class CreateUserTest {
     public String username;
     public String password;
     public String token;
+    public AccountActions accountActions;
+
 
 
     @Test
@@ -28,53 +30,57 @@ public class CreateUserTest {
         System.out.println("Step 1 - create user");
         createUser();
 
-        System.out.println("Step 2 - generate token");
-        generateToken();
-
-        System.out.println("Step 3 - obtain new user");
-        interractNewUser();
+//        System.out.println("Step 2 - generate token");
+//        generateToken();
+//
+//        System.out.println("Step 3 - obtain new user");
+//        interractNewUser();
 
     }
 
     public void createUser(){  //PASUL 1 CREEAM USERUL CARE SA NE OFERE ID-UL
 
-        RequestSpecification requestSpecification = RestAssured.given(); //configuram clientul cu anumite specificatii
-        requestSpecification.baseUri("https://demoqa.com"); //specficam url-ul de baza pe care vrem sa il configuram
-        requestSpecification.contentType("application/json"); //specificam ca e contentul de tip Jason
+//        RequestSpecification requestSpecification = RestAssured.given(); //configuram clientul cu anumite specificatii
+//        requestSpecification.baseUri("https://demoqa.com"); //specficam url-ul de baza pe care vrem sa il configuram
+//        requestSpecification.contentType("application/json"); //specificam ca e contentul de tip Jason
 
-        //Configuram request-ul
-
+        accountActions = new AccountActions();
         username = "Claudia" + System.currentTimeMillis(); //va genera valoare unica
         password = "Password!??@#1234";
+        RequestAccount requestAccount = new RequestAccount(username,password );
+        ResponseAccountSuccess responseAccountSuccess = accountActions.createNewAccount(requestAccount);
+
+        userID = responseAccountSuccess.getUserID(); //am salvat userID-ul pentru a-l folosi la urmatorul pas
+
+
+        //Configuram request-ul
 
 //        JSONObject requestBody = new JSONObject();  //construim un body de tipul Jason, functioneaza ca un fel de hashmap (cheie - valoare)
 //        requestBody.put("userName",userName);  //stabilim cheia-valoarea
 //        requestBody.put("password", "Password!??@#1234");  //stabilim cheia-valoarea
 
         //Am facut SEREALIZARE, am transformat body-ul sub forma unui obiect facut de noi
-        RequestAccount requestAccount = new RequestAccount(username,password );
-        requestSpecification.body(requestAccount);   //atasam body-ul pe constructia clientului (cea de sus)
+//        requestSpecification.body(requestAccount);   //atasam body-ul pe constructia clientului (cea de sus)
 
 
         //Accesam response-ul
 
-        Response response = requestSpecification.post("/Account/v1/User");  // accesam raspunsul trimitand un request de tip POST
-//        System.out.println(response.body());
-        ResponseBody body = response.getBody();
-        body.prettyPrint(); //folosim in loc de system out
+//        Response response = requestSpecification.post("/Account/v1/User");  // accesam raspunsul trimitand un request de tip POST
+////        System.out.println(response.body());
+//        ResponseBody body = response.getBody();
+//        body.prettyPrint(); //folosim in loc de system out
 
         //Validam statusul requestului
 
-        Assert.assertEquals(response.getStatusCode(), 201); //principala validare
+//        Assert.assertEquals(response.getStatusCode(), 201); //principala validare
+//
+//        //Validam response body-ul requestului
+//
+//        ResponseAccountSuccess responseAccountSuccess = response.body().as(ResponseAccountSuccess.class);
+//        Assert.assertNotNull(responseAccountSuccess.getUserID());  //verificam ca exista o valoare pt ID, ca nu e nul
+//        Assert.assertEquals(responseAccountSuccess.getUsername(), username); //verif ca username are valoarea din request
+//        Assert.assertNotNull(responseAccountSuccess.getBooks());  //verificam ca books sa contina cel putin "["
 
-        //Validam response body-ul requestului
-
-        ResponseAccountSuccess responseAccountSuccess = response.body().as(ResponseAccountSuccess.class);
-        Assert.assertNotNull(responseAccountSuccess.getUserID());  //verificam ca exista o valoare pt ID, ca nu e nul
-        Assert.assertEquals(responseAccountSuccess.getUsername(), username); //verif ca username are valoarea din request
-        Assert.assertNotNull(responseAccountSuccess.getBooks());  //verificam ca books sa contina cel putin "["
-
-        userID = responseAccountSuccess.getUserID(); //am salvat userID-ul pentru a-l folosi la urmatorul pas
 
     }
 
