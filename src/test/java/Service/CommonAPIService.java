@@ -10,7 +10,7 @@ public class CommonAPIService {
 
     //Aceasta clasa contine metode pentru tipuri de requesturi cu diferiti parametri (vom folosi polimorfismul)
 
-    public Response post(Object body, String url){  //post fara token, prin polimorfism
+    public Response post(Object body, String url){  //post fara token (fara autorizare), prin polimorfism
         RequestSpecification requestSpecification = RestAssured.given();
         requestSpecification.body(body);
 
@@ -20,7 +20,7 @@ public class CommonAPIService {
         return response;
     }
 
-    public Response post(Object body, String url, String token){  //post cu token, prin polimorfism
+    public Response post(Object body, String url, String token){  //post cu token (cu autorizare), prin polimorfism
         RequestSpecification requestSpecification = RestAssured.given();
         requestSpecification.header("Authorization", "Bearer " + token);
         requestSpecification.body(body);

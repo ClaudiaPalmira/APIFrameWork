@@ -9,6 +9,8 @@ import io.restassured.response.Response;
 
 public class AccountServiceImplementation implements AccountServiceInterface {
 
+    //dupa ce am definit AccountEndPoints am venit aici sa completam
+
     public AccountAPIService accountAPIService;
     @Override
     public Response createAccount(RequestAccount requestAccount) {
