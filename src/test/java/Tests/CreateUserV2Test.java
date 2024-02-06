@@ -39,7 +39,7 @@ public class CreateUserV2Test extends Hooks {
 
     }
 
-    public void createUser(){  //PASUL 1 CREEAM USERUL CARE SA NE OFERE ID-UL
+    public void createUser(){
 
         accountActions = new AccountActions();
         username = "Claudia" + System.currentTimeMillis(); //va genera valoare unica
@@ -52,8 +52,7 @@ public class CreateUserV2Test extends Hooks {
 
     }
 
-    public void generateToken(){  //PASUL 2 - FACEM POSTUL CARE NE DA UN TOKEN
-
+    public void generateToken(){
         accountActions = new AccountActions();
         RequestAccountToken requestAccountToken = new RequestAccountToken(username,password);
         accountActions.generateToken(requestAccountToken);

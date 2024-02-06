@@ -29,7 +29,7 @@ public class APIServiceHelper {
 
     private static String getRequestBody(RequestSpecification requestSpecification){
         String requestBody = "Request BODY: \n";
-        Object object = ((RequestSpecificationImpl) requestSpecification).getBody();
+        Object object = ((RequestSpecificationImpl) requestSpecification).getBody();  //scoatem body-ul de pe request
 
         if(object!= null){
             ObjectMapper mapper = new ObjectMapper();

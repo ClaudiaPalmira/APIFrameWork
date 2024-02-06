@@ -19,7 +19,7 @@ public class Hooks {
         LoggerUtility.endTestCase(testname);
     }
     @AfterSuite
-    public void mergeLogs(){
+    public void mergeLogs(){  //pune toate fisierele de loguri intr-un singur fisier
         LoggerUtility.mergeLogsIntoOne();
     }
 }

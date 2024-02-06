@@ -14,10 +14,11 @@ public class AccountActions {
     public AccountServiceImplementation accountService;
 
     public ResponseAccountSuccess createNewAccount(RequestAccount requestAccount){
-        accountService = new AccountServiceImplementation();
-        Response response = accountService.createAccount(requestAccount); //executa aceasta actiune
+        accountService = new AccountServiceImplementation();  //facem instantierea obiectului nostru
+        Response response = accountService.createAccount(requestAccount); //facem un request unde conectam serviciul cu layerul de Rest
 
-        Assert.assertEquals((int) RestRequestStatus.SC_CREATED, response.getStatusCode());  //am specificat primita "int" si facem assert-ul
+        // URMATOAREA ETAPA - VALIDARILE
+        Assert.assertEquals((int) RestRequestStatus.SC_CREATED, response.getStatusCode());  //am specificat primitiva "int" si facem assert-ul
 
         ResponseAccountSuccess responseAccountSuccess = response.body().as(ResponseAccountSuccess.class); //face deserializarea
         Assert.assertNotNull(responseAccountSuccess.getUserID()); //facem asserturi restul 3 coloanelor in jos
@@ -31,6 +32,7 @@ public class AccountActions {
         accountService = new AccountServiceImplementation();
         Response response = accountService.generateToken(requestAccountToken);
 
+        // URMATOAREA ETAPA - VALIDARILE
         Assert.assertEquals(RestRequestStatus.SC_OK,response.getStatusCode());
 
         ResponseTokenSuccess responseTokenSuccess = response.body().as(ResponseTokenSuccess.class);
@@ -39,7 +41,8 @@ public class AccountActions {
         Assert.assertEquals(responseTokenSuccess.getStatus(),"Success");
         Assert.assertEquals(responseTokenSuccess.getResult(), "User authorized successfully.");
 
-                return responseTokenSuccess;
+         return responseTokenSuccess;
 
     }
+
 }
