@@ -30,12 +30,22 @@ public class CreateUserV2Test extends Hooks {
 
         System.out.println("Step 1 - create user");
         createUser();
+        System.out.println(" ");
 
         System.out.println("Step 2 - generate token");
         generateToken();
-//
-//        System.out.println("Step 3 - obtain new user");
-//        interractNewUser();
+        System.out.println(" ");
+
+        System.out.println("Step 3 - obtain new user");
+        interractNewUser();
+        System.out.println(" ");
+
+        System.out.println("Step 4 - delete specific user");
+        deleteSpecificUser();
+
+        System.out.println("Step 5 - obtain new user");
+        interractNewUser();
+        System.out.println(" ");
 
     }
 
@@ -49,35 +59,29 @@ public class CreateUserV2Test extends Hooks {
         ResponseAccountSuccess responseAccountSuccess = accountActions.createNewAccount(requestAccount);
 
         userID = responseAccountSuccess.getUserID();
-
     }
 
     public void generateToken(){
-        accountActions = new AccountActions();
-        RequestAccountToken requestAccountToken = new RequestAccountToken(username,password);
-        accountActions.generateToken(requestAccountToken);
 
+        accountActions = new AccountActions();
+
+        RequestAccountToken requestAccountToken = new RequestAccountToken(username,password);
         ResponseTokenSuccess responseTokenSuccess = accountActions.generateToken(requestAccountToken);
 
         token = responseTokenSuccess.getToken();
-
     }
 
      public void interractNewUser(){
 
-         RequestSpecification requestSpecification = RestAssured.given(); //configuram clientul cu anumite specificatii
-         requestSpecification.baseUri("https://demoqa.com"); //specficam url-ul de baza pe care vrem sa il configuram
-         requestSpecification.contentType("application/json"); //specificam ca e contentul de tip Jason
-         requestSpecification.header("Authorization", "Bearer " + token); //autorizare care foloseste token
-
-         Response response = requestSpecification.get("/Account/v1/User/" + userID); //compunere de endpoint
-
-         Assert.assertEquals(response.getStatusCode(), 200);
-
-         ResponseAccountAuthSuccess responseAccountAuthSuccess = response.body().as(ResponseAccountAuthSuccess.class);
-         Assert.assertNotNull(responseAccountAuthSuccess.getUserId());  //verificam ca exista o valoare pt id, cat nu e nul
-         Assert.assertEquals(responseAccountAuthSuccess.getUsername(), username); //verif ca username are valoarea din request
-         Assert.assertNotNull(responseAccountAuthSuccess.getBooks());  //verificam ca books sa contina cel putin "["
-
+         accountActions = new AccountActions();
+         accountActions.obtainSpecificAccount(userID, token, username);
      }
+
+     //Stergem noul user creat
+    public void deleteSpecificUser(){
+        accountActions = new AccountActions();
+        accountActions.deleteSpecificAccount(userID, token);
+
+    }
+
 }
