@@ -7,6 +7,7 @@ import Objects.RequestObject.RequestAccountToken;
 import Objects.ResponseObject.ResponseAccountAuthSuccess;
 import Objects.ResponseObject.ResponseAccountSuccess;
 import Objects.ResponseObject.ResponseTokenSuccess;
+import PropertyUtility.PropertyUtility;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import io.restassured.response.ResponseBody;
@@ -21,6 +22,7 @@ public class CreateUserV2Test extends Hooks {
     public String password;
     public String token;
     public AccountActions accountActions;
+    public RequestAccount requestAccount;
 
 
 
@@ -52,10 +54,9 @@ public class CreateUserV2Test extends Hooks {
     public void createUser(){
 
         accountActions = new AccountActions();
-        username = "Claudia" + System.currentTimeMillis(); //va genera valoare unica
-        password = "Password!??@#1234";
+        PropertyUtility propertyUtility = new PropertyUtility("CreateUser");
 
-        RequestAccount requestAccount = new RequestAccount(username,password );
+        requestAccount = new RequestAccount(propertyUtility.getAllData());
         ResponseAccountSuccess responseAccountSuccess = accountActions.createNewAccount(requestAccount);
 
         userID = responseAccountSuccess.getUserID();
@@ -65,7 +66,7 @@ public class CreateUserV2Test extends Hooks {
 
         accountActions = new AccountActions();
 
-        RequestAccountToken requestAccountToken = new RequestAccountToken(username,password);
+        RequestAccountToken requestAccountToken = new RequestAccountToken(requestAccount.getUserName(), requestAccount.getPassword());
         ResponseTokenSuccess responseTokenSuccess = accountActions.generateToken(requestAccountToken);
 
         token = responseTokenSuccess.getToken();
@@ -74,7 +75,7 @@ public class CreateUserV2Test extends Hooks {
      public void interractNewUser(){
 
          accountActions = new AccountActions();
-         accountActions.obtainSpecificAccount(userID, token, username);
+         accountActions.obtainSpecificAccount(userID, token, requestAccount.getUserName());
      }
 
      //Stergem noul user creat
